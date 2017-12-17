@@ -1,3 +1,5 @@
 @echo off
+:a
 node ../src/index.js
-pause
+@echo Restarting server
+goto :a
