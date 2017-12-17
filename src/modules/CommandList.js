@@ -400,31 +400,9 @@ Commands.list = {
         process.exit(1);
     },
     restart: function (gameServer) {
-        var QuadNode = require('./QuadNode.js');
         Logger.warn("Restarting server...");
-        gameServer.httpServer = null;
-        gameServer.wsServer = null;
-        gameServer.run = true;
-        gameServer.lastNodeId = 1;
-        gameServer.lastPlayerId = 1;
-
-        for (var i = 0; i < gameServer.clients.length; i++) {
-            var client = gameServer.clients[i];
-            client.close();
-        };
-
-        gameServer.nodes = []; 
-        gameServer.nodesVirus = []; 
-        gameServer.nodesFood = []; 
-        gameServer.nodesEjected = []; 
-        gameServer.nodesPlayer = []; 
-        gameServer.movingNodes = [];
-        gameServer.commands;
-        gameServer.tickCounter = 0;
-        gameServer.startTime = Date.now();
-        gameServer.setBorder(gameServer.config.borderWidth, gameServer.config.borderHeight);
-        gameServer.quadTree = new QuadNode(gameServer.border, 64, 32);
-
+        gameServer.wsServer.close();
+        process.exit(3)
     },
     kick: function (gameServer, split) {
         var id = parseInt(split[1]);
