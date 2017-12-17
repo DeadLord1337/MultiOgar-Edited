@@ -43,6 +43,7 @@ MinionPlayer.prototype.checkConnection = function () {
     
     // pellet-collecting mode
     if (this.owner.collectPellets) {
+    if (this.gameServer.tickCounter % 15 == 0)
 	this.viewNodes = [];
 	var self = this;
 	this.viewBox = this.owner.viewBox;
