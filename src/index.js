@@ -114,14 +114,6 @@ function setParam(paramName, val){
 
 
 gameServer.start();
-figlet(('MultiOgar-Edited  ' + gameServer.version), function(err, data) {
-    if (err) {
-        console.log('Something went wrong...');
-        console.dir(err);
-        return;
-    }
-    console.log(data)
-});
 
 // Initialize the server console
 if (showConsole) {
