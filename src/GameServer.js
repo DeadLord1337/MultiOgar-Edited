@@ -68,6 +68,7 @@ function GameServer() {
         mobilePhysics: 0, // Whether or not the server uses mobile agar.io physics
         badWordFilter: 1, // Toggle whether you want the bad word filter on (0 to disable, 1 to enable) 
         serverRestart: 0, // Toggle whether you want your server to auto restart in minutes. (0 to disable)
+        serverTime: 40, // The speed of the game the higher the value, the slower (Vanilla 40)
 
         /** CLIENT **/
         serverMaxLB: 10, // Controls the maximum players displayed on the leaderboard.
@@ -556,7 +557,7 @@ GameServer.prototype.sendChatMessage = function (from, to, message) {
 };
 
 GameServer.prototype.timerLoop = function () {
-    var timeStep = 40; // vanilla: 40
+    var timeStep = this.config.serverTime; // vanilla: 40
     var ts = Date.now();
     var dt = ts - this.timeStamp;
     if (dt < timeStep - 5) {
@@ -577,32 +578,8 @@ GameServer.prototype.mainLoop = function () {
     var self = this;
 
     // Restart
-    if (this.tickCounter > this.config.serverRestart) {
-        var QuadNode = require('./modules/QuadNode.js');
-        this.httpServer = null;
-        this.wsServer = null;
-        this.run = true;
-        this.lastNodeId = 1;
-        this.lastPlayerId = 1;
-
-        for (var i = 0; i < this.clients.length; i++) {
-            var client = this.clients[i];
-            client.close();
-        };
-
-        this.nodes = []; 
-        this.nodesVirus = [];
-        this.nodesFood = []; 
-        this.nodesEjected = [];
-        this.nodesPlayer = [];
-        this.movingNodes = [];
-        this.commands;
-        this.tickCounter = 0;
-        this.startTime = Date.now();
-        this.setBorder(this.config.borderWidth, this.config.borderHeight);
-        this.quadTree = new QuadNode(this.border, 64, 32);
-    };
-
+    if (this.tickCounter > this.config.serverRestart) process.exit(1);
+    
     // Loop main functions
     if (this.run) {
         // Move moving nodes first
