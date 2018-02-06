@@ -528,12 +528,12 @@ GameServer.prototype.onChatMessage = function (from, to, message) {
 
 GameServer.prototype.checkBadWord = function (value) {
     if (!value) return false;
-    value = value.toLowerCase().trim();
-    if (!value) return false;
-    var split = value.split(" ");
+    value = " " + value.toLowerCase().trim() + " ";
     for (var i = 0; i < this.badWords.length; i++) {
-        for (var j = 0; j < split.length; j++)
-            if (split[j] === this.badWords[i]) return true;
+											  
+        if (value.indexOf(this.badWords[i]) >= 0) {
+            return true;
+        }
     }
     return false;
 };
@@ -1027,10 +1027,10 @@ GameServer.prototype.loadFiles = function () {
             var words = fs.readFileSync(fileNameBadWords, 'utf-8');
             words = words.split(/[\r\n]+/);
             words = words.map(function (arg) {
-                return arg.trim().toLowerCase();
+                return " " + arg.trim().toLowerCase() + " "; // Formatting
             });
             words = words.filter(function (arg) {
-                return !!arg;
+                return arg.length > 2;
             });
             this.badWords = words;
             Logger.info(this.badWords.length + " bad words loaded");
