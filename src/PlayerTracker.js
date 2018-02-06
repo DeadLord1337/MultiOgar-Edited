@@ -178,7 +178,8 @@ PlayerTracker.prototype.checkConnection = function() {
         var dt = (this.gameServer.stepDateTime - this.socket.closeTime) / 1e3;
         if (pt && (!this.cells.length || dt >= pt)) {
             // Remove all client cells
-            while (this.cells.length) this.gameServer.removeNode(this.cells[0]);
+            while (this.cells.length) 
+                this.gameServer.removeNode(this.cells[0]);
         }
         this.cells = [];
         this.isRemoved = true;
@@ -221,9 +222,13 @@ PlayerTracker.prototype.updateTick = function() {
     this.viewNodes = [];
     var self = this;
     this.gameServer.quadTree.find(this.viewBox, function(check) {
+		if (check.owner != self)
         self.viewNodes.push(check);
     });
-    this.viewNodes.sort(function(a, b) { return a.nodeId - b.nodeId; });
+	this.viewNodes = this.viewNodes.concat(this.cells);
+    this.viewNodes.sort(function(a, b) { 
+        return a.nodeId - b.nodeId; 
+    });
 };
 
 PlayerTracker.prototype.sendUpdate = function() {
@@ -267,15 +272,17 @@ PlayerTracker.prototype.sendUpdate = function() {
         }
         if (this.viewNodes[newIndex].nodeId > this.clientNodes[oldIndex].nodeId) {
             var node = this.clientNodes[oldIndex];
-            if (node.isRemoved) eatNodes.push(node);
-            else delNodes.push(node);
+            if (node.isRemoved)
+                eatNodes.push(node);
+            else
+                delNodes.push(node);
             oldIndex++;
             continue;
         }
         var node = this.viewNodes[newIndex];
         if (node.isRemoved) continue;
         // only send update for moving or player nodes
-        if (node.isMoving || node.cellType == 0 || node.cellType == 2 || this.gameServer.config.serverGamemode == 3 && node.cellType == 1)
+        if (node.isMoving || node.cellType == 0 || node.cellType == 1 || node.cellType == 2)
             updNodes.push(node);
         newIndex++;
         oldIndex++;
