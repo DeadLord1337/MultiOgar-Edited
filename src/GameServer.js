@@ -826,7 +826,7 @@ GameServer.prototype.splitPlayerCell = function (client, parent, angle, mass) {
 
     // Create cell and add it to node list
     var newCell = new Entity.PlayerCell(this, client, parent.position, size);
-    newCell.setBoost(this.config.splitVelocity * Math.pow(size, 0.0122), angle);
+    newCell.setBoost(this.config.splitVelocity * Math.pow(size, 0.0123), angle);
     this.addNode(newCell);
 };
 
@@ -913,7 +913,7 @@ GameServer.prototype.splitCells = function (client) {
     // Split split-able cells
     cellToSplit.forEach((cell) => {
         var d = client.mouse.clone().sub(cell.position);
-        if (d.dist() < 1) {
+        if (d.dist(d) < 1) {
             d.x = 1, d.y = 0;
         }
 
